@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pegboard — Hot Wheels Collection</title>
+<meta name="theme-color" content="#1B1B1E">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pegboard">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@500;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <h1 class="brand">Pegboard<span class="brand-dot">.</span></h1>
+    <div class="count-badge" id="countBadge">0 in the case</div>
+  </div>
+  <div class="controls">
+    <div class="search-wrap">
+      <input type="search" id="searchInput" placeholder="Search name or number…" autocomplete="off">
+    </div>
+    <select id="seriesFilter">
+      <option value="">All series</option>
+    </select>
+  </div>
+</header>
+
+<main id="grid" class="grid" aria-live="polite">
+  <!-- car cards injected here -->
+</main>
+
+<div id="emptyState" class="empty-state hidden">
+  <div class="empty-flag" aria-hidden="true"></div>
+  <p class="empty-title">The pegboard's empty.</p>
+  <p class="empty-sub">Scan a package to hang your first car.</p>
+</div>
+
+<button id="scanBtn" class="scan-fab" aria-label="Scan a Hot Wheels package">
+  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+    <circle cx="12" cy="13" r="4"></circle>
+  </svg>
+  <span>Scan</span>
+</button>
+
+<input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
+
+<!-- Scan review / confirm sheet -->
+<div id="scanSheet" class="sheet hidden">
+  <div class="sheet-panel">
+    <div class="sheet-header">
+      <h2>Read the card</h2>
+      <button class="sheet-close" id="scanCloseBtn" aria-label="Cancel scan">&times;</button>
+    </div>
+    <div class="sheet-body">
+      <div class="scan-preview-wrap">
+        <img id="scanPreview" alt="Scanned package">
+        <div id="scanStatus" class="scan-status">Reading package…</div>
+      </div>
+      <form id="scanForm">
+        <label class="field">
+          <span>Name</span>
+          <input type="text" id="fieldName" placeholder="e.g. Twin Mill" required>
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Number</span>
+            <input type="text" id="fieldNumber" placeholder="e.g. 180/250">
+          </label>
+          <label class="field">
+            <span>Series</span>
+            <input type="text" id="fieldSeries" placeholder="e.g. HW Speed Graphics" list="seriesSuggestions">
+            <datalist id="seriesSuggestions"></datalist>
+          </label>
+        </div>
+        <details class="raw-text-details">
+          <summary>Raw scanned text</summary>
+          <p id="rawOcrText" class="raw-text"></p>
+        </details>
+        <div class="sheet-actions">
+          <button type="button" id="rescanBtn" class="btn-ghost">Retake photo</button>
+          <button type="submit" class="btn-primary">Add to collection</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Car detail / edit modal -->
+<div id="detailSheet" class="sheet hidden">
+  <div class="sheet-panel">
+    <div class="sheet-header">
+      <h2 id="detailTitle">Car</h2>
+      <button class="sheet-close" id="detailCloseBtn" aria-label="Close">&times;</button>
+    </div>
+    <div class="sheet-body">
+      <img id="detailImage" class="detail-image" alt="">
+      <form id="detailForm">
+        <label class="field">
+          <span>Name</span>
+          <input type="text" id="detailName" required>
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Number</span>
+            <input type="text" id="detailNumber">
+          </label>
+          <label class="field">
+            <span>Series</span>
+            <input type="text" id="detailSeries">
+          </label>
+        </div>
+        <p class="detail-meta" id="detailMeta"></p>
+        <div class="sheet-actions">
+          <button type="button" id="deleteBtn" class="btn-danger">Delete</button>
+          <button type="submit" class="btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
